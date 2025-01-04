@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Sample </title>
+        <script src="sample.js" type="module"></script>
+        <link rel="stylesheet" href="sample.css">
+    </head>
+    <body>
+        <header>
+            <h1>S H A D E R &nbsp; S T U D I O</h1>
+            <button onclick="window.location='/teapot'">TEAPOT</button>
+            <button onclick="window.location='/salmon'">SALMON</button>
+            <button onclick="window.location='/pawn'">PAWN</button>
+            <button class="test" id="button">RUN</button>
+        </header>
+        <div class="box">
+            <textarea id="vertex_shader_text" spellcheck="false">
+// vertex shader
+attribute vec4 aVertexPosition;
+attribute vec3 aVertexNormal;
+attribute vec2 aTextureCoord;
+
+uniform mat4 uNormalMatrix;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+
+varying highp vec2 vTextureCoord;
+varying highp vec3 vLighting;
+
+void main(void) {
+    gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+    vTextureCoord = aTextureCoord;
+
+    // Apply lighting effect
+
+    highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+    highp vec3 directionalLightColor = vec3(1, 1, 1);
+    highp vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
+
+    highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
+
+    highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+    vLighting = ambientLight + (directionalLightColor * directional);
+}
+            </textarea>
+            <textarea id="fragment_shader_text" spellcheck="false">
+// fragment shader
+varying highp vec2 vTextureCoord;
+varying highp vec3 vLighting;
+
+uniform sampler2D uSampler;
+
+void main(void) {
+    highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
+    gl_FragColor = vec4(texelColor.rgb * vLighting, texelColor.a);
+}
+            </textarea>
+            <canvas id="glcanvas" width="645" height="580"></canvas>
+        </div>
+    </body>
+</html>
