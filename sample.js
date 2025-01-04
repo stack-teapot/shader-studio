@@ -5,6 +5,10 @@ import { LoadOBJ } from "./load_obj.js"
 let deltaTime = 0
 
 let button = document.getElementById("button")
+let button_teapot = document.getElementById("teapot")
+let button_salmon = document.getElementById("salmon")
+let button_pawn = document.getElementById("pawn")
+let obj_name = "salmon"
 let fragment_shader_text = document.getElementById("fragment_shader_text").value
 let vertex_shader_text = document.getElementById("vertex_shader_text").value
 
@@ -14,14 +18,24 @@ button.addEventListener("click", function () {
   main()
 })
 
+button_teapot.addEventListener("click", function () {
+  obj_name = "teapot"
+  main()
+})
+
+button_salmon.addEventListener("click", function () {
+  obj_name = "salmon"
+  main()
+})
+
+button_pawn.addEventListener("click", function () {
+  obj_name = "pawn"
+  main()
+})
+
 main()
 
 async function main() {
-
-  let obj_name = window.location.pathname.slice(1)
-  if (obj_name != "teapot" && obj_name != "salmon" && obj_name != "pawn") {
-    obj_name = "teapot"
-  }
   const obj = await LoadOBJ(`${obj_name}.obj`)
   //console.log(obj)
   const canvas = document.querySelector("#glcanvas")
